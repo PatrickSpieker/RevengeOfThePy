@@ -84,13 +84,13 @@ class InsertInto(Query):
         if cols:
             query += "("
             for col in cols[:len(cols)-1]:
-                query += col + ", "
+                query += col + ","
             query += cols[len(cols)-1] + ") "  # manually adding the last one
         
         query += "VALUES ("
         for val in vals[:len(vals)-1]:
-            query += "\'" + val + "\'" + ", "
-        query += "\'" + vals[len(cols)-1] + "\'"
+            query += "\'" + val + "\'" + ","
+        query += "\'" + vals[len(vals)-1] + "\'"
         query += ");"
 
         self.query = query

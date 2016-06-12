@@ -44,13 +44,36 @@ class UpdateTest(unittest.TestCase):
         s = Update("publishers", [("name", "Patrick")])
         self.assertEqual(s.query, "UPDATE publishers SET name=Patrick;")
 
-
     def test_filter_col(self):
         s = Update("publishers", [("age", "19"), ("gender", "male")], ("name", "Patrick"))
         self.assertEqual(s.query, "UPDATE publishers SET age=19,gender=male WHERE name=Patrick;")
 
+
 class DeleteTest(unittest.TestCase):
-    pass
+
+    def test_delete_null(self):
+        s = Delete("publishers", "name", "NULL")
+        self.assertEqual(s.query, "DELETE FROM publishers WHERE name IS NULL;")
+
+    def test_non_null(self):
+        s = Delete("publishers", "age", "19")
+        self.assertEqual(s.query, "DELETE FROM publishers WHERE age=19;")
+
+    def test_no_where(self):
+        s = Delete("publishers")
+        self.assertEqual(s.query, "DELETE FROM publishers;")
+
+
+class InsertIntoTest(unittest.TestCase):
+
+    def test_no_cols(self):
+        s = InsertInto("publishers", ("patrick", "19", "male"))
+        self.assertEqual(s.query, "INSERT INTO publishers VALUES ('patrick','19','male');")
+
+    def test_with_cols(self):
+        s = InsertInto("publishers", ("patrick", "19", "male"), ("name", "age", "gender"))
+        self.assertEqual(s.query, "INSERT INTO publishers (name,age,gender) VALUES ('patrick','19','male');")
+
 
 if __name__ == '__main__':
     unittest.main()
