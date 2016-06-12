@@ -6,13 +6,25 @@ con = mdb.connect('localhost', 'testuser', 'test623','OA_test')
 
 with con:
     cur = con.cursor()
-    p = TSVParser("OA_journals.tsv")
-    l = p.readline()
-    pub = l[0]
-    journal = l[1]
-    #c = InsertInto("publishers", [pub, journal], ["name", "journal"])
-    c = Delete("publishers", "name", "NULL")
-    print c.__str__()
-    c.execute(cur)
+    p = TSVParser("data/OA_journals.tsv")
+    while not p.isEmpty():
+        l = p.readline()
 
+        pub_insert = InsertInto("publishers", l[0:2], ["name", "journal"])
+        journal_insert = InsertInto("journals", l[1:],  ["name", "eISSN", "pISSN", "author_price",
+                                                                "website", "year", "free"])
+        try:
+            print "Inserting to publisher..."
+            pub_insert.execute(cur)
+            con.commit()
+        except:
+            con.rollback()
 
+        try:
+            print "Inserting to journal..."
+            journal_insert.execute(cur)
+            con.commit()
+        except:
+            con.rollback()
+
+    con.close()
