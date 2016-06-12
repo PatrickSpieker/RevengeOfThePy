@@ -24,7 +24,7 @@ class Select(Query):
             for col in col_names[:len(col_names)-1]:
                 query += col + ","
             query += col_names[len(col_names)-1]
-        query += " FROM " + table_name
+        query += " FROM " + table_name + ";"
         self.query = query
 
     def execute(self, cur):
@@ -42,7 +42,9 @@ class Update(Query):
         query += last[0] + "=" + last[1]
 
         if filter_col_val:
-            query += " WHERE " + filter_col_val[0] + "=" + filter_col_val[1] + ";"
+            query += " WHERE " + filter_col_val[0] + "=" + filter_col_val[1]
+
+        query += ";"
 
         self.query = query
 
