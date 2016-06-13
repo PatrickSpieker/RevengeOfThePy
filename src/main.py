@@ -1,7 +1,7 @@
 from Parsers import *
-import MySQLdb as mdb
+import MySQLdb as Mdb
 
-con = mdb.connect('localhost', 'testuser', 'test623', 'OA_test')
+con = Mdb.connect('localhost', 'testuser', 'test623', 'OA_test')
 
 with con:
     cur = con.cursor()
@@ -16,7 +16,7 @@ with con:
         try:
             cur.execute(pub_insert)
             con.commit()
-        except Exception:
+        except Mdb.Error:
             print "Issue row was: " + str(row) +"\n"
             print "Issue query was: " + pub_insert + "\n\n"
             con.rollback()
@@ -24,7 +24,7 @@ with con:
         try:
             cur.execute(journal_insert)
             con.commit()
-        except Exception:
+        except Mdb.Error:
             print "Issue row was: " + str(row) + "\n"
             print "Issue query was: " + journal_insert + "\n\n"
             con.rollback()
