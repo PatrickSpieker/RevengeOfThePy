@@ -15,19 +15,13 @@ class TSVParser:
         self.reader = csv.reader(f, dialect="excel-tab")
 
     def readline(self):
-        if self.isEmpty():
+        if self.is_empty():
             raise StopIteration
         else:
             return self.reader.next()
 
-    def isEmpty(self):
+    def is_empty(self):
         if next(self.reader, None):
             return False
         else: 
             return True
-    
-class OAJournalParser(TSVParser):
-    def __init__(self, file_name):
-        super(OAJournalParser, self).__init__(file_name)
-
-

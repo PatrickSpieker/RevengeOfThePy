@@ -16,7 +16,7 @@ class Query:
 
 
 class Select(Query):
-    def __init__(self, table_name, col_names=None):
+    def __init__(self, table_name, col_names=None, filter_cols=None):
         query = "SELECT "
         if not col_names:
             query += "*"
@@ -24,7 +24,16 @@ class Select(Query):
             for col in col_names[:len(col_names)-1]:
                 query += col + ","
             query += col_names[len(col_names)-1]
-        query += " FROM " + table_name + ";"
+        query += " FROM " + table_name
+
+        if filter_cols:
+            query += " WHERE "
+            for pair in filter_cols[:len(filter_cols)-1]:
+                query += pair[0] + "='" + pair[1] + "',"
+            last_pair = filter_cols[len(filter_cols)-1]
+            query += last_pair[0] + "='" + last_pair[1] + "'"
+
+        query += ";"
         self.query = query
 
     def execute(self, cur):
