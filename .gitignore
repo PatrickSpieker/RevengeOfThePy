@@ -1,2 +1,6 @@
 .idea/
 *.pyc
+*.zip
+*.csv
+*.pdf
+*.DS_Store
