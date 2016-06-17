@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 import re
+import csv
+from datetime import date
 
 issn_patt = re.compile("\d{4}-\d{3}[\dxX]")
 
@@ -22,49 +24,29 @@ driver.set_window_size(1120, 550)
 driver.get("http://olabout.wiley.com/WileyCDA/Section/id-828038.html")
 
 journal_select = Select(driver.find_element_by_id("journal"))
+with open("../data/cleaned/wiley.csv", 'w') as f:
+    writer = csv.writer(f)
+    writer.writerow(["pub_name", "journal_name", "journal_type", "issn", "apc"])
+    for journal in get_child_tag_strings(selected):
+        try:
+            journal_select.select_by_visible_text(journal)
+            oa_option_element = driver.find_element_by_id("displayJOAP")
 
-for journal in get_child_tag_strings(selected):
-    try:
-        journal_select.select_by_visible_text(journal)
-        oa_option = driver.find_element_by_id("displayJOAP")
-        price = driver.find_element_by_id("displayJAPC")
-        link_with_issn = driver.find_element_by_xpath("//div[@id='displayJAPCL']/a[1]")
-        issn_matches = issn_patt.findall(link_with_issn.get_attribute("href"))
-        if issn_matches:
-            print journal + ": " + link_with_issn.get_attribute("href") + "\n\tOA? : " + \
-                oa_option.text + "\n\tPrice: " + price.text + "\n\tISSN: " + issn_matches[0]
-        else:
-            print journal + ": " + link_with_issn.get_attribute("href") + "\n\tOA? : " + \
-                oa_option.text + "\n\tPrice: " + price.text + "\n\tISSN: " + "(no valid ISSN found)"
-    except BaseException as e:
-        print e
-"""
-price_list = []
-issn_list = []
+            if (oa_option_element.text == "Fully Open Access") or (oa_option_element.text == "OpenChoice"):
+                price = driver.find_element_by_id("displayJAPC")
+                cleaned_price = price.text.replace(",", "").replace("$", "")
+                link_with_issn = driver.find_element_by_xpath("//div[@id='displayJAPCL']/a[1]")
+                issn_matches = issn_patt.findall(link_with_issn.get_attribute("href"))
+                if oa_option_element.text == "Fully Open Access":
+                    journal_type = "OA"
+                else:
+                    journal_type = "Hybrid"
 
-
-
-list_item_patt = re.compile("\'\'")
-issn_patt = re.compile("\d{4}-\d{3}[\dxX]")
-
-for script in soup.find_all('script'):
-    text = script.get_text()
-    if "JAPC " in text:
-        arr = re.sub('.*\[', '', re.sub('\].*', '', text)).replace("\n", "")
-        #print arr
-        price_list = arr.split("',")
-    elif "JOAPL" in text:
-        issn_list = issn_patt.findall(text)
-        #for i in link_list:
-        #    print i
-print len(price_list)
-print len(issn_list)"""
-"""
-Thoughts:
-    -use: http://www.wileyopenaccess.com/view/journals.html to associate journal name to ISSN
-    then use http://www.wileyopenaccess.com/details/content/12f25e0654f/Publication-Charges.html
-    to associate journal name to APC
-
-"""
-
-
+                if issn_matches:
+                    row = ["Wiley", journal, str(date.today()), journal_type, issn_matches[0], cleaned_price]
+                    print row
+                    writer.writerow(row)
+                else:
+                    print "Error: " + journal + "\n\t" + oa_option_element.text
+        except BaseException as e:
+            print e
