@@ -1,4 +1,5 @@
 .idea/
+*.xlsx
 *.log
 *.pyc
 *.zip
