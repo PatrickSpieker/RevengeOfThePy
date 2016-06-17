@@ -13,7 +13,7 @@ issn_patt = re.compile("\d{4}-\d{3}[\dxX]")
 
 with open("../data/cleaned/biomedcentral.csv", 'w') as f:
     writer = csv.writer(f)
-    writer.writerow(["pub_name", "journal_name", "journal_type", "issn", "apc"])
+    writer.writerow(["pub_name", "journal_name", "date", "journal_type", "issn", "apc"])
     for tag in soup.find_all(class_="list-stacked__item"):
         link = tag.find("a")["href"]
         print link

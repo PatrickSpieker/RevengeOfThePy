@@ -26,7 +26,7 @@ driver.get("http://olabout.wiley.com/WileyCDA/Section/id-828038.html")
 journal_select = Select(driver.find_element_by_id("journal"))
 with open("../data/cleaned/wiley.csv", 'w') as f:
     writer = csv.writer(f)
-    writer.writerow(["pub_name", "journal_name", "journal_type", "issn", "apc"])
+    writer.writerow(["pub_name", "journal_name", "date", "journal_type", "issn", "apc"])
     for journal in get_child_tag_strings(selected):
         try:
             journal_select.select_by_visible_text(journal)

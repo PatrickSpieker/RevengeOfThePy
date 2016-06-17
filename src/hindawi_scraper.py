@@ -13,7 +13,7 @@ price_patt = re.compile("\$\d[,|\d*]\d*")
 
 with open("../data/cleaned/hindawi.csv", 'w') as f:
     writer = csv.writer(f)
-    writer.writerow(["pub_name", "journal_name", "journal_type", "issn", "apc"])
+    writer.writerow(["pub_name", "journal_name", "date", "journal_type", "issn", "apc"])
     for tag in itertools.chain(soup.find_all(class_="subscription_table_plus"),
                                soup.find_all(class_="subscription_table_minus")):
         journal_title = tag.find("a").string.strip()

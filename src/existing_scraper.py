@@ -1,11 +1,15 @@
 import csv
 from datetime import date
-with open("../data/OA_journals.tsv", "r") as f:
-    reader = csv.reader(f, delimiter="\t")
+with open("../data/OA_journals.tsv", "rU") as f:
+    reader = csv.reader(f, dialect=csv.excel_tab)
     next(reader)
     with open("../data/cleaned/original_converted.csv", "w") as g:
         writer = csv.writer(g)
         for row in reader:
-            row = [row[0], row[1], row[2]]
+            #print row
+            if row[2]:
+                row = [row[0], row[1], str(date.today()), "OA" if row[7] else "Hybrid", row[2], row[6]]
+                print row
+
 
 
