@@ -3,6 +3,5 @@
 *.log
 *.pyc
 *.zip
-*.csv
 *.pdf
 *.DS_Store
