@@ -1,2 +1,2 @@
 # ThePyStrikesBack
-Wrapper classes for SQL queries from the MySQLdb module
+Web scraper for grabbing the prices of various OpenAccess Scientific Journals

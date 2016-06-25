@@ -30,10 +30,7 @@ with open("../data/cleaned/biomedcentral.csv", 'w') as f:
             if price_matches or paid_for_matches:
                 break
 
-        #print price_matches
-        #print paid_for_matches
         journal_name_tag = about_soup.find(class_="identity__title-link")
-        #print "\n" + str(journal_name_tag) + "\n"
         if journal_name_tag:
             journal_name = journal_name_tag.string
             issn_tag = about_soup.find(class_="SideBox_defList")
