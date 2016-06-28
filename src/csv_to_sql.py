@@ -41,9 +41,6 @@ with con:
                 q1 = get_t1_insert(row)
                 q2 = get_t2_insert(row)
                 q3 = get_t3_insert(row)
-                #print q1
-                #print q2
-                #print q3
                 try:
                     cur.execute(q1)
                     con.commit()
