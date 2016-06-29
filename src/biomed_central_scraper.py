@@ -30,6 +30,9 @@ with open("../data/cleaned/biomedcentral.csv", 'w') as f:
             if price_matches or paid_for_matches:
                 break
 
+        if not price_matches and not paid_for_matches:
+            print "BOOOOOO: " + link
+
         journal_name_tag = about_soup.find(class_="identity__title-link")
         if journal_name_tag:
             journal_name = journal_name_tag.string
@@ -43,10 +46,10 @@ with open("../data/cleaned/biomedcentral.csv", 'w') as f:
                         price = 0
                     issn = issn_matches[0]
                     row = ["BioMed Central", journal_name, str(date.today()), "OA", issn, price]
-                    print row
+                    #print row
                     writer.writerow([unicode(s).encode('utf-8') for s in row])
 
-    else:
-        print "Not in valid format (or redirected): " + link
+        else:
+            print "Not in valid format (or redirected): " + link
 
 
