@@ -21,6 +21,8 @@ import urllib
 from bs4 import BeautifulSoup
 from datetime import date
 import re
+import itertools
+import csv
 from ScraperExceptions import MissingAttributeException
 
 
@@ -109,36 +111,113 @@ class BioMedCentralScraper(BaseJournalScraper):
 
 
 class ElsevierScraper(BaseJournalScraper):
-    def __init__(self, csv_filename):
-        pass
+    REPLS = {
+        "\xca": " ", "\r\xa0": "", "\x96": "n",
+        "\x97": "o", "\x87": "a", "\x8b": "a",
+        "\x92": "i", "\x8e": "e", "\x8f": "e",
+        "\x8d": "c", "\xd5": "'", "\xea": "I",
+        " fee not payable by author": ""
+    }
+
+    def __init__(self, csv_filepath):
+        f = open(csv_filepath, "r")
+        self.reader = csv.reader(f)
+        next(self.reader)
+
+    @staticmethod
+    def __clean_entry(string):
+        for repl in ElsevierScraper.REPLS:
+            string = string.replace(repl, ElsevierScraper.REPLS[repl])
+        return string
 
     def get_entries(self):
-        yield None
+        for row in self.reader:
+            row = [ElsevierScraper.__clean_entry(i) for i in row]
+            yield ("Elsevier", row[1], str(date.today()),
+                    'Hybrid' if row[2] == 'Hybrid' else 'OA',
+                    row[0], row[4])
 
 
 class ExistingScraper(BaseJournalScraper):
-    def __init__(self, csv_filename):
-        pass
+    def __init__(self, csv_filepath):
+        f = open(csv_filepath, "rU")
+        self.reader = csv.reader(f, dialect=csv.excel_tab)
+        next(self.reader)
+
+    @staticmethod
+    def __get_row(row):
+        if not row[2]:
+            raise MissingAttributeException
+        return (row[0], row[1], str(date.today()),
+                "OA" if row[7] else "Hybrid", row[2], row[6])
 
     def get_entries(self):
-        yield None
+        for row in self.reader:
+            try:
+                yield ExistingScraper.__get_row(row)
+            except MissingAttributeException:
+                print row
+                print "\tThe above row is broken"
 
 
 class HindawiScraper(BaseJournalScraper):
     def __init__(self, http_address):
-        pass
+        f = urllib.urlopen(http_address)
+        self.soup = BeautifulSoup(f, 'lxml')
+
+    @staticmethod
+    def __get_title(tag):
+        return tag.find("a").string.strip()
+
+    @staticmethod
+    def __get_price(results):
+        price_matches = BaseJournalScraper.PRICE_PATT.findall(results[1])
+        if not price_matches:
+            raise MissingAttributeException
+        return price_matches[0].replace(",", "").replace("$", "")
+
+    @staticmethod
+    def __get_issn(results):
+        issn_matches = BaseJournalScraper.ISSN_PATT.findall(results[0])
+        if not issn_matches:
+            raise MissingAttributeException
+        return issn_matches[0]
 
     def get_entries(self):
-        pass
+        for tag in itertools.chain(self.soup.find_all(class_="subscription_table_plus"),
+                                   self.soup.find_all(class_="subscription_table_minus")):
+            journal_title = HindawiScraper.__get_title(tag)
+            results = [i.string for i in tag.find_all("td") if i.string]
+            if not results or (len(results) != 2):
+                print "ERROR:"
+                print "\t" + str(tag.contents)
+                continue
+            try:
+                price = HindawiScraper.__get_price(results)
+                issn = HindawiScraper.__get_issn(results)
+            except MissingAttributeException:
+                print "ERROR:"
+                print "\t" + str(tag.contents)
+                continue
+
+            yield ["Hindawi", journal_title, str(date.today()), "OA", issn, price]
+
 
 class PLOSScraper(BaseJournalScraper):
+    """
+    Scraper isn't actually finished yet. Can't port it
+    """
     def __init__(self, http_address):
         pass
 
     def get_entries(self):
         pass
 
+
 class SageHybridScraper(BaseJournalScraper):
+    """
+    Scraper isn't actually finished yet. Can't port it
+    """
     def __init__(self):
         pass
 
