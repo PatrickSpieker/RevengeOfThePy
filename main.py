@@ -1,8 +1,8 @@
-import csv
-import MySQLdb as mdb
-from JournalScrapers import *
 from contextlib import closing
-import logging
+
+import MySQLdb as mdb
+
+from scrapers.journalscrapers import *
 
 
 def get_t1_insert(row):
