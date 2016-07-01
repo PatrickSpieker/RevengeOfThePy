@@ -75,7 +75,9 @@ with closing(mdb.connect(host='localhost',
 
     for scraper in scrapers:
         try:
+            print str(scraper)
             for row in scraper.get_entries():
+                print row[1] + ": " + row[-1]
                 logging.info("Error log for %s:" % row[1])
                 q1 = get_t1_insert(row)
                 q2 = get_t2_insert(row)

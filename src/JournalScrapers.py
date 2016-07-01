@@ -23,7 +23,6 @@ from datetime import date
 import re
 import itertools
 import csv
-import sys
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import Select
@@ -49,6 +48,33 @@ class BaseJournalScraper(BaseScraper):
     PRICE_PATT = re.compile("\$\d[,|\d*]\d*")
     ISSN_PATT = re.compile("\d{4}-\d{3}[\dxX]")
 
+    REPLS = {
+        "\xca": " ", "\r\xa0": "", "\x96": "n",
+        "\x97": "o", "\x87": "a", "\x8b": "a",
+        "\x92": "i", "\x8e": "e", "\x8f": "e",
+        "\xd5": "'", "\xea": "I", "\x9f": "u",
+        "\x8a": "a", "\x8d": "c", "\x91": "i",
+        "\x85": "O", "\x9a": "o", "\xd0": "",
+        "\xa7": "B", " fee not payable by author": ""
+    }
+
+    @staticmethod
+    def clean_string(string):
+        for repl in BaseJournalScraper.REPLS:
+            string = string.replace(repl, ElsevierScraper.REPLS[repl])
+        return string
+
+    @staticmethod
+    def to_unicode_item(item):
+        try:
+            return unicode(item, errors="replace")
+        except TypeError:
+            return item
+
+    @staticmethod
+    def to_unicode_row(row):
+        return [BaseJournalScraper.to_unicode_item(i) for i in row]
+
 
 class BioMedCentralScraper(BaseJournalScraper):
     paid_for_patt = re.compile("do not need to pay")
@@ -64,7 +90,7 @@ class BioMedCentralScraper(BaseJournalScraper):
             price_matches = BioMedCentralScraper.PRICE_PATT.findall(text)
             paid_for_matches = BioMedCentralScraper.paid_for_patt.findall(text)
             if price_matches:
-                return price_matches[0].replace(",", "").replace("$", "").replace("'", "")
+                return str(int(round(float(price_matches[0].replace(",", "").replace("$", "").replace("'", "")))))
             elif paid_for_matches:
                 return 0
         raise MissingAttributeException
@@ -116,35 +142,22 @@ class BioMedCentralScraper(BaseJournalScraper):
                 print "\n\tNo ISSN could be found"
                 continue
 
-            yield ("BioMed Central", journal_name, str(date.today()), "OA", issn, price)
+            yield self.to_unicode_row(["BioMed Central", journal_name, str(date.today()), "OA", issn, str(price)])
 
 
 class ElsevierScraper(BaseJournalScraper):
-    REPLS = {
-        "\xca": " ", "\r\xa0": "", "\x96": "n",
-        "\x97": "o", "\x87": "a", "\x8b": "a",
-        "\x92": "i", "\x8e": "e", "\x8f": "e",
-        "\x8d": "c", "\xd5": "'", "\xea": "I",
-        " fee not payable by author": ""
-    }
 
     def __init__(self, csv_filepath):
         f = open(csv_filepath, "r")
         self.reader = csv.reader(f)
         next(self.reader)
 
-    @staticmethod
-    def __clean_entry(string):
-        for repl in ElsevierScraper.REPLS:
-            string = string.replace(repl, ElsevierScraper.REPLS[repl])
-        return string
-
     def get_entries(self):
         for row in self.reader:
-            row = [ElsevierScraper.__clean_entry(i) for i in row]
-            yield ("Elsevier", row[1], str(date.today()),
-                    'Hybrid' if row[2] == 'Hybrid' else 'OA',
-                    row[0], row[4])
+            row = [BaseJournalScraper.clean_string(i) for i in row]
+            yield BaseJournalScraper.to_unicode_row(["Elsevier", row[1], str(date.today()),
+                   'Hybrid' if row[2] == 'Hybrid' else 'OA',
+                   row[0], str(int(round(float(row[4]))))])
 
 
 class ExistingScraper(BaseJournalScraper):
@@ -157,8 +170,8 @@ class ExistingScraper(BaseJournalScraper):
     def __get_row(row):
         if not row[2]:
             raise MissingAttributeException
-        return (row[0], row[1], row[6],
-                "OA" if row[4] else "Hybrid", row[2], row[4])
+        return BaseJournalScraper.to_unicode_row((row[0], row[1], row[6],
+                "OA" if row[4] else "Hybrid", row[2], str(int(round(float(row[4]))))))
 
     def get_entries(self):
         for row in self.reader:
@@ -166,7 +179,6 @@ class ExistingScraper(BaseJournalScraper):
                 yield ExistingScraper.__get_row(row)
             except MissingAttributeException as e:
                 logging.warning(str(row) + str(e))
-
 
 
 class HindawiScraper(BaseJournalScraper):
@@ -183,7 +195,7 @@ class HindawiScraper(BaseJournalScraper):
         price_matches = BaseJournalScraper.PRICE_PATT.findall(results[1])
         if not price_matches:
             raise MissingAttributeException
-        return price_matches[0].replace(",", "").replace("$", "")
+        return str(int(round(float(price_matches[0].replace(",", "").replace("$", "")))))
 
     @staticmethod
     def __get_issn(results):
@@ -209,7 +221,7 @@ class HindawiScraper(BaseJournalScraper):
                 print "\t" + str(tag.contents)
                 continue
 
-            yield ["Hindawi", journal_title, str(date.today()), "OA", issn, price]
+            yield BaseJournalScraper.to_unicode_row(["Hindawi", journal_title, str(date.today()), "OA", issn, price])
 
 
 class PLOSScraper(BaseJournalScraper):
@@ -235,18 +247,6 @@ class SageHybridScraper(BaseJournalScraper):
 
 
 class SpringerHybridScraper(BaseJournalScraper):
-    REPLS = {
-        "\x9f": "u",
-        "\x8a": "a",
-        "\x8e": "e",
-        "\x8d": "c",
-        "\x91": "i",
-        "\x87": "a",
-        "\x85": "O",
-        "\x9a": "o",
-        "\xd0": "",
-        "\xa7": "B"
-    }
 
     def __init__(self, csv_path):
         f = open(csv_path, "r")
@@ -254,17 +254,11 @@ class SpringerHybridScraper(BaseJournalScraper):
         for i in range(9):
             next(self.reader)
 
-    @staticmethod
-    def __clean_name(string):
-        for repl in SpringerHybridScraper.REPLS:
-            string = string.replace(repl, SpringerHybridScraper.REPLS[repl])
-        return string
-
     def get_entries(self):
         for row in self.reader:
             if row[11] == "Hybrid (Open Choice)":
-                yield ("Springer", SpringerHybridScraper.__clean_name(row[1]), str(date.today()),
-                       "Hybrid", row[5], 3000)
+                yield BaseJournalScraper.to_unicode_row(["Springer", BaseJournalScraper.clean_string(row[1]),
+                                                     str(date.today()), "Hybrid", row[5], str(3000)])
 
 
 class SpringerOpenScraper(BaseJournalScraper):
@@ -278,7 +272,7 @@ class SpringerOpenScraper(BaseJournalScraper):
             text = tag.get_text()
             price_matches = SpringerOpenScraper.PRICE_PATT.findall(text)
             if price_matches:
-                return price_matches[0].replace(",", "").replace("$", "").replace("'", "")
+                return str(int(round(float(price_matches[0].replace(",", "").replace("$", "").replace("'", "")))))
         raise MissingAttributeException
 
     @staticmethod
@@ -330,7 +324,7 @@ class SpringerOpenScraper(BaseJournalScraper):
                 print link + ": No ISSN could be found"
                 continue
 
-            yield ["Springer", journal_name, str(date.today()), "OA", issn, price]
+            yield self.to_unicode_row(["Springer", journal_name, str(date.today()), "OA", issn, str(price)])
 
 
 class WileyScraper(BaseJournalScraper):
@@ -357,6 +351,13 @@ class WileyScraper(BaseJournalScraper):
             raise MissingAttributeException
         return issn_matches[0]
 
+    def __get_price(self):
+        try:
+            price = str(int(round(float(self.driver.find_element_by_id("displayJAPC")
+                            .text.replace(",", "").replace("$", "")))))
+        except ValueError as e:
+            raise MissingAttributeException
+        return price
     def get_entries(self):
         selected = self.soup.find(class_="journal")
         journal_select = Select(self.driver.find_element_by_id("journal"))
@@ -375,8 +376,12 @@ class WileyScraper(BaseJournalScraper):
             oa_option_element = self.driver.find_element_by_id("displayJOAP")
 
             if (oa_option_element.text == "Fully Open Access") or (oa_option_element.text == "OpenChoice"):
-                price = (self.driver.find_element_by_id("displayJAPC")
-                             .text.replace(",", "").replace("$", ""))
+
+                try:
+                    price = self.__get_price()
+                except MissingAttributeException:
+                    print journal + ": Unable to find price"
+                    continue
                 try:
                     issn_matches = self.__get_issn()
                 except MissingAttributeException:
@@ -384,7 +389,6 @@ class WileyScraper(BaseJournalScraper):
                     continue
 
                 journal_type = "OA" if oa_option_element.text == "Fully Open Access" else "Hybrid"
-
-                yield ["Wiley", journal, str(date.today()), journal_type, issn_matches, price]
+                yield self.to_unicode_row(["Wiley", journal, str(date.today()), journal_type, issn_matches, price])
 
 
