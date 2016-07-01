@@ -28,6 +28,7 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import Select
 from ScraperExceptions import MissingAttributeException
+import logging
 
 
 class BaseScraper:
@@ -163,10 +164,9 @@ class ExistingScraper(BaseJournalScraper):
         for row in self.reader:
             try:
                 yield ExistingScraper.__get_row(row)
-            except MissingAttributeException:
-                print row
-                print "\tThe above row is broken"
-                pass
+            except MissingAttributeException as e:
+                logging.warning(str(row) + str(e))
+
 
 
 class HindawiScraper(BaseJournalScraper):

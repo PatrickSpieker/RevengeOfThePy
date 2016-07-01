@@ -2,6 +2,7 @@ import csv
 import MySQLdb as mdb
 from JournalScrapers import *
 from contextlib import closing
+import logging
 
 
 def get_t1_insert(row):
@@ -42,6 +43,7 @@ setup_commands = [
          journal_name VARCHAR(200));"""
 ]
 
+logging.basicConfig(filename="../logs/org_errors.log", filemode="w", level=logging.DEBUG)
 
 with closing(mdb.connect(host='localhost',
                          user='pspieker',
@@ -74,6 +76,7 @@ with closing(mdb.connect(host='localhost',
     for scraper in scrapers:
         try:
             for row in scraper.get_entries():
+                logging.info("Error log for %s:" % row[1])
                 q1 = get_t1_insert(row)
                 q2 = get_t2_insert(row)
                 q3 = get_t3_insert(row)
@@ -83,11 +86,11 @@ with closing(mdb.connect(host='localhost',
                             cur.execute(query)
                             con.commit()
                         except mdb.Error as e:
-                            print "Error on: " + query
-                            print e
+                            logging.warning("\t" + query + "\n\t" + str(e))
                             con.rollback()
                             continue
                         #print "Success on: " + query
+                logging.debug("\n\n")
         except StopIteration:
             print str(scraper) + " is not implemented yet"
 
