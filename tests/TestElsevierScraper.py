@@ -1,5 +1,6 @@
 import unittest
-from src.JournalScrapers import ElsevierScraper
+
+from scrapers.journalscrapers import ElsevierScraper
 
 
 class TestElsevierScraper(unittest.TestCase):

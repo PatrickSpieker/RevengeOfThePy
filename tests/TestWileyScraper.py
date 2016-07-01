@@ -1,5 +1,6 @@
 import unittest
-from src.JournalScrapers import WileyScraper
+
+from scrapers.journalscrapers import WileyScraper
 
 
 class TestWileyScraper(unittest.TestCase):

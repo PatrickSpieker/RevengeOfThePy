@@ -1,19 +1,3 @@
-"""
-class BaseScraper <- the base, abstract class
-    init(self)
-
-    get_entries() <- generator function for every entry in the scraper
-
-class BaseWebScraper(BaseScraper): <- abstract base class for the scrapers that pull from Web
-    init(self, input_address)
-
-class JournalHTMLScraper(BaseWebScraper)
-
-class JournalCSVScraper(BaseWebScraper)
-
-
-"""
-
 
 # imports for class implementation
 import csv
@@ -27,8 +11,8 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import Select
-from src.scrapers.ScraperExceptions import MissingAttributeException
 
+from scrapers.ScraperExceptions import MissingAttributeException
 from scrapers.base import BaseJournalScraper
 
 

@@ -1,5 +1,7 @@
 import unittest
-from src.JournalScrapers import HindawiScraper
+
+from scrapers.journalscrapers import HindawiScraper
+
 
 class TestJournalScraper(unittest.TestCase):
     def setUp(self):

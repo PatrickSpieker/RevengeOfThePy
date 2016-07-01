@@ -1,5 +1,6 @@
 import unittest
-from src.JournalScrapers import *
+
+from scrapers.journalscrapers import *
 
 
 class TestGenScraper(unittest.TestCase):
