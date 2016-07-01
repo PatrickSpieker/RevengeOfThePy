@@ -358,6 +358,7 @@ class WileyScraper(BaseJournalScraper):
         except ValueError as e:
             raise MissingAttributeException
         return price
+
     def get_entries(self):
         selected = self.soup.find(class_="journal")
         journal_select = Select(self.driver.find_element_by_id("journal"))
