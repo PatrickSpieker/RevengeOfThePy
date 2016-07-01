@@ -1,5 +1,7 @@
 import csv
 import MySQLdb as mdb
+from JournalScrapers import *
+from contextlib import closing
 
 
 def get_t1_insert(row):
@@ -8,9 +10,11 @@ def get_t1_insert(row):
     return query
 
 def get_t2_insert(row):
+
     query = "INSERT INTO journal_prices VALUES ('"
     query += row[1] + "', '" + row[2] + "', "
-    query += row[5] + ");"
+    query += str(row[5]) + ");"
+    #print "Price query: " + query
     return query
 
 def get_t3_insert(row):
@@ -18,22 +22,45 @@ def get_t3_insert(row):
     query += row[1] + "', '" + row[4] + "', '" + row[3] + "');"
     return query
 
-con = mdb.connect('localhost', 'pspieker', 'spie1004', 'OA_journals')
-with con:
-    cur = con.cursor()
-    paths_to_data = ["../data/cleaned/biomedcentral.csv", "../data/cleaned/elsevier.csv",
-                     "../data/cleaned/hindawi.csv", "../data/cleaned/original_converted.csv",
-                     "../data/cleaned/springer.csv", "../data/cleaned/wiley.csv"]
+setup_commands = [
+    "CREATE DATABASE IF NOT EXISTS OA_journals;",
+    "USE OA_journals",
+    "DROP TABLE IF EXISTS publishers;",
+    "DROP TABLE IF EXISTS journal_prices;",
+    "DROP TABLE IF EXISTS journal_info;",
+    """CREATE TABLE IF NOT EXISTS journal_info
+      (journal_name VARCHAR(200),
+       issn VARCHAR(12),
+       journal_type VARCHAR(10),
+       PRIMARY KEY (journal_name));""",
+    """CREATE TABLE IF NOT EXISTS journal_prices
+        (journal_name VARCHAR(200),
+         issn VARCHAR(12),
+         journal_type VARCHAR(10));""",
+    """CREATE TABLE IF NOT EXISTS publishers
+        (pub_name VARCHAR(200),
+         journal_name VARCHAR(200));"""
+]
+
+
+with closing(mdb.connect(host='localhost',
+                         user='pspieker',
+                         passwd='test623')) as con:
+    # run setup commands
+    for cmd in setup_commands:
+        with closing(con.cursor()) as cur:
+            cur.execute(cmd)
+
     scrapers = [
-        BiomedCentralScraper("url"),
-        ElsevierScraper(""),
-        ExistingScraper(""),
-        HindawiScraper(""),
-        PLOSScraper(""),
+        BioMedCentralScraper("https://www.biomedcentral.com/journals"),
+        ElsevierScraper("../data/elsevier/2016-uncleaned-csv.csv"),
+        ExistingScraper("../data/OA_journals.tsv"),
+        HindawiScraper("http://www.hindawi.com/apc/"),
+        PLOSScraper("https://www.plos.org/publication-fees"),
         SageHybridScraper(""),
-        SpringerHybridScraper(""),
-        SpringerOpenScraper(""),
-        WileyScraper("")
+        SpringerHybridScraper("../data/springer/2016+Springer+Journals+List.csv"),
+        SpringerOpenScraper("http://www.springeropen.com/journals"),
+        WileyScraper("http://olabout.wiley.com/WileyCDA/Section/id-828038.html")
     ]
     # Table 1:
     # pub_name -> journal_name
@@ -45,32 +72,22 @@ with con:
     # journal_name -> issn
 
     for scraper in scrapers:
-        for row in scraper.get_entries():
-            q1 = get_t1_insert(row)
-            q2 = get_t2_insert(row)
-            q3 = get_t3_insert(row)
-            try:
-                cur.execute(q1)
-                con.commit()
-            except Exception as e:
-                print "\nError on: " + q1
-                print e
-                print "\n"
-                con.rollback()
-            try:
-                cur.execute(q2)
-                con.commit()
-            except Exception as e:
-                print "\nError on: " + q2
-                print e
-                print "\n"
-                con.rollback()
-            try:
-                cur.execute(q3)
-                con.commit()
-            except Exception as e:
-                print "\nError on: " + q3
-                print e
-                print "\n"
-                con.rollback()
+        try:
+            for row in scraper.get_entries():
+                q1 = get_t1_insert(row)
+                q2 = get_t2_insert(row)
+                q3 = get_t3_insert(row)
+                for query in (q1, q2, q3):
+                    with closing(con.cursor()) as cur:
+                        try:
+                            cur.execute(query)
+                            con.commit()
+                        except mdb.Error as e:
+                            print "Error on: " + query
+                            print e
+                            con.rollback()
+                            continue
+                        #print "Success on: " + query
+        except StopIteration:
+            print str(scraper) + " is not implemented yet"
 
