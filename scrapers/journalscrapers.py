@@ -12,7 +12,7 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import Select
 
-from scrapers.ScraperExceptions import MissingAttributeException
+from scrapers.exceptions import MissingAttributeException
 from scrapers.base import BaseJournalScraper
 
 
@@ -168,8 +168,14 @@ class PLOSScraper(BaseJournalScraper):
     Scraper isn't actually finished yet. Can't port it
     """
     def __init__(self, http_address):
-        pass
+        driver = webdriver.PhantomJS(executable_path="/usr/local/bin/phantomjs")
+        driver.set_window_size(1120, 550)
+        driver.get("https://www.plos.org/publication-fees")
 
+        a = driver.find_elements_by_class_name("feature-block-text")
+        for i in a:
+            # print i.text
+            pass
     def get_entries(self):
         raise StopIteration
 
