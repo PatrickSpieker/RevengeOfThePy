@@ -1,0 +1,432 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ThePyStrikesBack.scrapers.journalscrapers &mdash; ThePyStrikesBack 0.1.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="ThePyStrikesBack 0.1.1 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for ThePyStrikesBack.scrapers.journalscrapers</h1><div class="highlight"><pre>
+<span></span>
+<span class="c1"># imports for class implementation</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">urllib2</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span>
+
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">from</span> <span class="nn">selenium</span> <span class="kn">import</span> <span class="n">webdriver</span>
+<span class="kn">from</span> <span class="nn">selenium.common.exceptions</span> <span class="kn">import</span> <span class="n">NoSuchElementException</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.support.ui</span> <span class="kn">import</span> <span class="n">Select</span>
+
+<span class="kn">from</span> <span class="nn">exceptions</span> <span class="kn">import</span> <span class="n">MissingAttributeException</span>
+<span class="kn">from</span> <span class="nn">base</span> <span class="kn">import</span> <span class="n">BaseJournalScraper</span>
+
+
+<div class="viewcode-block" id="BioMedCentralScraper"><a class="viewcode-back" href="../../../ThePyStrikesBack.scrapers.html#ThePyStrikesBack.scrapers.journalscrapers.BioMedCentralScraper">[docs]</a><span class="k">class</span> <span class="nc">BioMedCentralScraper</span><span class="p">(</span><span class="n">BaseJournalScraper</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Web scraper for publisher BioMed Central</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        http_address (str): Address of the BioMed Central webpage with journal information</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">paid_for_patt</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;do not need to pay&quot;</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">http_address</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">http_address</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;lxml&#39;</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__get_price</span><span class="p">(</span><span class="n">soup</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">class_</span><span class="o">=</span><span class="s2">&quot;CmsArticle_body&quot;</span><span class="p">):</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+            <span class="n">price_matches</span> <span class="o">=</span> <span class="n">BioMedCentralScraper</span><span class="o">.</span><span class="n">PRICE_PATT</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+            <span class="n">paid_for_matches</span> <span class="o">=</span> <span class="n">BioMedCentralScraper</span><span class="o">.</span><span class="n">paid_for_patt</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">price_matches</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">price_matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)))))</span>
+            <span class="k">elif</span> <span class="n">paid_for_matches</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">raise</span> <span class="n">MissingAttributeException</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__get_journal_name</span><span class="p">(</span><span class="n">soup</span><span class="p">):</span>
+        <span class="n">journal_name_tag</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">class_</span><span class="o">=</span><span class="s2">&quot;identity__title-link&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">journal_name_tag</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">MissingAttributeException</span>
+        <span class="k">return</span> <span class="n">journal_name_tag</span><span class="o">.</span><span class="n">string</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__get_issn</span><span class="p">(</span><span class="n">soup</span><span class="p">):</span>
+        <span class="n">issn_tag</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">class_</span><span class="o">=</span><span class="s2">&quot;SideBox_defList&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">issn_tag</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">MissingAttributeException</span>
+        <span class="n">issn_matches</span> <span class="o">=</span> <span class="n">BioMedCentralScraper</span><span class="o">.</span><span class="n">ISSN_PATT</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">issn_tag</span><span class="o">.</span><span class="n">get_text</span><span class="p">())</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">issn_matches</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">MissingAttributeException</span>
+        <span class="k">return</span> <span class="n">issn_matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<div class="viewcode-block" id="BioMedCentralScraper.get_entries"><a class="viewcode-back" href="../../../ThePyStrikesBack.scrapers.html#ThePyStrikesBack.scrapers.journalscrapers.BioMedCentralScraper.get_entries">[docs]</a>    <span class="k">def</span> <span class="nf">get_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">class_</span><span class="o">=</span><span class="s2">&quot;list-stacked__item&quot;</span><span class="p">):</span>
+            <span class="n">link</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)[</span><span class="s2">&quot;href&quot;</span><span class="p">]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">g</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">link</span> <span class="o">+</span> <span class="s2">&quot;about&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+                <span class="n">about_soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s1">&#39;lxml&#39;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">print</span> <span class="n">link</span> <span class="o">+</span> <span class="s2">&quot;: Connection problems, continuing to the next entry&quot;</span>
+                <span class="k">continue</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">price</span> <span class="o">=</span> <span class="n">BioMedCentralScraper</span><span class="o">.</span><span class="n">__get_price</span><span class="p">(</span><span class="n">about_soup</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">MissingAttributeException</span><span class="p">:</span>
+                <span class="k">print</span> <span class="n">link</span>
+                <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">No price could be found&quot;</span>
+                <span class="k">continue</span>  <span class="c1"># skipping to the next entry</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">journal_name</span> <span class="o">=</span> <span class="n">BioMedCentralScraper</span><span class="o">.</span><span class="n">__get_journal_name</span><span class="p">(</span><span class="n">about_soup</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">MissingAttributeException</span><span class="p">:</span>
+                <span class="k">print</span> <span class="n">link</span>
+                <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">No journal name could be found&quot;</span>
+                <span class="k">continue</span>  <span class="c1"># skipping to the next entry</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">issn</span> <span class="o">=</span> <span class="n">BioMedCentralScraper</span><span class="o">.</span><span class="n">__get_issn</span><span class="p">(</span><span class="n">about_soup</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">MissingAttributeException</span><span class="p">:</span>
+                <span class="k">print</span> <span class="n">link</span>
+                <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">No ISSN could be found&quot;</span>
+                <span class="k">continue</span>
+
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_unicode_row</span><span class="p">([</span><span class="s2">&quot;BioMed Central&quot;</span><span class="p">,</span> <span class="n">journal_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()),</span> <span class="s2">&quot;OA&quot;</span><span class="p">,</span> <span class="n">issn</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">price</span><span class="p">)])</span></div></div>
+
+
+<div class="viewcode-block" id="ElsevierScraper"><a class="viewcode-back" href="../../../ThePyStrikesBack.scrapers.html#ThePyStrikesBack.scrapers.journalscrapers.ElsevierScraper">[docs]</a><span class="k">class</span> <span class="nc">ElsevierScraper</span><span class="p">(</span><span class="n">BaseJournalScraper</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">csv_filepath</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">csv_filepath</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reader</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ElsevierScraper.get_entries"><a class="viewcode-back" href="../../../ThePyStrikesBack.scrapers.html#ThePyStrikesBack.scrapers.journalscrapers.ElsevierScraper.get_entries">[docs]</a>    <span class="k">def</span> <span class="nf">get_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reader</span><span class="p">:</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="p">[</span><span class="n">BaseJournalScraper</span><span class="o">.</span><span class="n">clean_string</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">row</span><span class="p">]</span>
+            <span class="k">yield</span> <span class="n">BaseJournalScraper</span><span class="o">.</span><span class="n">to_unicode_row</span><span class="p">([</span><span class="s2">&quot;Elsevier&quot;</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()),</span>
+                   <span class="s1">&#39;Hybrid&#39;</span> <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Hybrid&#39;</span> <span class="k">else</span> <span class="s1">&#39;OA&#39;</span><span class="p">,</span>
+                   <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">4</span><span class="p">]))))])</span></div></div>
+
+
+<div class="viewcode-block" id="ExistingScraper"><a class="viewcode-back" href="../../../ThePyStrikesBack.scrapers.html#ThePyStrikesBack.scrapers.journalscrapers.ExistingScraper">[docs]</a><span class="k">class</span> <span class="nc">ExistingScraper</span><span class="p">(</span><span class="n">BaseJournalScraper</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">csv_filepath</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">csv_filepath</span><span class="p">,</span> <span class="s2">&quot;rU&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">dialect</span><span class="o">=</span><span class="n">csv</span><span class="o">.</span><span class="n">excel_tab</span><span class="p">)</span>
+        <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reader</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__get_row</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="n">MissingAttributeException</span>
+        <span class="k">return</span> <span class="n">BaseJournalScraper</span><span class="o">.</span><span class="n">to_unicode_row</span><span class="p">((</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span>
+                <span class="s2">&quot;OA&quot;</span> <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="k">else</span> <span class="s2">&quot;Hybrid&quot;</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">4</span><span class="p">]))))))</span>
+
+<div class="viewcode-block" id="ExistingScraper.get_entries"><a class="viewcode-back" href="../../../ThePyStrikesBack.scrapers.html#ThePyStrikesBack.scrapers.journalscrapers.ExistingScraper.get_entries">[docs]</a>    <span class="k">def</span> <span class="nf">get_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reader</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">ExistingScraper</span><span class="o">.</span><span class="n">__get_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">MissingAttributeException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="HindawiScraper"><a class="viewcode-back" href="../../../ThePyStrikesBack.scrapers.html#ThePyStrikesBack.scrapers.journalscrapers.HindawiScraper">[docs]</a><span class="k">class</span> <span class="nc">HindawiScraper</span><span class="p">(</span><span class="n">BaseJournalScraper</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">http_address</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">http_address</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;lxml&#39;</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__get_title</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">tag</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">string</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__get_price</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+        <span class="n">price_matches</span> <span class="o">=</span> <span class="n">BaseJournalScraper</span><span class="o">.</span><span class="n">PRICE_PATT</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">price_matches</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">MissingAttributeException</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">price_matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)))))</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__get_issn</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+        <span class="n">issn_matches</span> <span class="o">=</span> <span class="n">BaseJournalScraper</span><span class="o">.</span><span class="n">ISSN_PATT</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">issn_matches</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">MissingAttributeException</span>
+        <span class="k">return</span> <span class="n">issn_matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<div class="viewcode-block" id="HindawiScraper.get_entries"><a class="viewcode-back" href="../../../ThePyStrikesBack.scrapers.html#ThePyStrikesBack.scrapers.journalscrapers.HindawiScraper.get_entries">[docs]</a>    <span class="k">def</span> <span class="nf">get_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">class_</span><span class="o">=</span><span class="s2">&quot;subscription_table_plus&quot;</span><span class="p">),</span>
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">class_</span><span class="o">=</span><span class="s2">&quot;subscription_table_minus&quot;</span><span class="p">)):</span>
+            <span class="n">journal_title</span> <span class="o">=</span> <span class="n">HindawiScraper</span><span class="o">.</span><span class="n">__get_title</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">string</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tag</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">string</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">results</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="k">print</span> <span class="s2">&quot;ERROR:&quot;</span>
+                <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">contents</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">price</span> <span class="o">=</span> <span class="n">HindawiScraper</span><span class="o">.</span><span class="n">__get_price</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+                <span class="n">issn</span> <span class="o">=</span> <span class="n">HindawiScraper</span><span class="o">.</span><span class="n">__get_issn</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">MissingAttributeException</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s2">&quot;ERROR:&quot;</span>
+                <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">contents</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="k">yield</span> <span class="n">BaseJournalScraper</span><span class="o">.</span><span class="n">to_unicode_row</span><span class="p">([</span><span class="s2">&quot;Hindawi&quot;</span><span class="p">,</span> <span class="n">journal_title</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()),</span> <span class="s2">&quot;OA&quot;</span><span class="p">,</span> <span class="n">issn</span><span class="p">,</span> <span class="n">price</span><span class="p">])</span></div></div>
+
+
+<div class="viewcode-block" id="PLOSScraper"><a class="viewcode-back" href="../../../ThePyStrikesBack.scrapers.html#ThePyStrikesBack.scrapers.journalscrapers.PLOSScraper">[docs]</a><span class="k">class</span> <span class="nc">PLOSScraper</span><span class="p">(</span><span class="n">BaseJournalScraper</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Scraper isn&#39;t actually finished yet. Can&#39;t port it</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">http_address</span><span class="p">):</span>
+        <span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">PhantomJS</span><span class="p">(</span><span class="n">executable_path</span><span class="o">=</span><span class="s2">&quot;/usr/local/bin/phantomjs&quot;</span><span class="p">)</span>
+        <span class="n">driver</span><span class="o">.</span><span class="n">set_window_size</span><span class="p">(</span><span class="mi">1120</span><span class="p">,</span> <span class="mi">550</span><span class="p">)</span>
+        <span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;https://www.plos.org/publication-fees&quot;</span><span class="p">)</span>
+
+        <span class="n">a</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_elements_by_class_name</span><span class="p">(</span><span class="s2">&quot;feature-block-text&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
+            <span class="c1"># print i.text</span>
+            <span class="k">pass</span>
+<div class="viewcode-block" id="PLOSScraper.get_entries"><a class="viewcode-back" href="../../../ThePyStrikesBack.scrapers.html#ThePyStrikesBack.scrapers.journalscrapers.PLOSScraper.get_entries">[docs]</a>    <span class="k">def</span> <span class="nf">get_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">StopIteration</span></div></div>
+
+
+<div class="viewcode-block" id="SageHybridScraper"><a class="viewcode-back" href="../../../ThePyStrikesBack.scrapers.html#ThePyStrikesBack.scrapers.journalscrapers.SageHybridScraper">[docs]</a><span class="k">class</span> <span class="nc">SageHybridScraper</span><span class="p">(</span><span class="n">BaseJournalScraper</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Scraper isn&#39;t actually finished yet. Can&#39;t port it</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">http_address</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="SageHybridScraper.get_entries"><a class="viewcode-back" href="../../../ThePyStrikesBack.scrapers.html#ThePyStrikesBack.scrapers.journalscrapers.SageHybridScraper.get_entries">[docs]</a>    <span class="k">def</span> <span class="nf">get_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">StopIteration</span></div></div>
+
+
+<div class="viewcode-block" id="SpringerHybridScraper"><a class="viewcode-back" href="../../../ThePyStrikesBack.scrapers.html#ThePyStrikesBack.scrapers.journalscrapers.SpringerHybridScraper">[docs]</a><span class="k">class</span> <span class="nc">SpringerHybridScraper</span><span class="p">(</span><span class="n">BaseJournalScraper</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">csv_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">):</span>
+            <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reader</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SpringerHybridScraper.get_entries"><a class="viewcode-back" href="../../../ThePyStrikesBack.scrapers.html#ThePyStrikesBack.scrapers.journalscrapers.SpringerHybridScraper.get_entries">[docs]</a>    <span class="k">def</span> <span class="nf">get_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reader</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Hybrid (Open Choice)&quot;</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">BaseJournalScraper</span><span class="o">.</span><span class="n">to_unicode_row</span><span class="p">([</span><span class="s2">&quot;Springer&quot;</span><span class="p">,</span> <span class="n">BaseJournalScraper</span><span class="o">.</span><span class="n">clean_string</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                                                     <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()),</span> <span class="s2">&quot;Hybrid&quot;</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="mi">3000</span><span class="p">)])</span></div></div>
+
+
+<div class="viewcode-block" id="SpringerOpenScraper"><a class="viewcode-back" href="../../../ThePyStrikesBack.scrapers.html#ThePyStrikesBack.scrapers.journalscrapers.SpringerOpenScraper">[docs]</a><span class="k">class</span> <span class="nc">SpringerOpenScraper</span><span class="p">(</span><span class="n">BaseJournalScraper</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">http_address</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">http_address</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;lxml&#39;</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__get_price</span><span class="p">(</span><span class="n">soup</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">class_</span><span class="o">=</span><span class="s2">&quot;CmsArticle_body&quot;</span><span class="p">):</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+            <span class="n">price_matches</span> <span class="o">=</span> <span class="n">SpringerOpenScraper</span><span class="o">.</span><span class="n">PRICE_PATT</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">price_matches</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">price_matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)))))</span>
+        <span class="k">raise</span> <span class="n">MissingAttributeException</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__get_journal_name</span><span class="p">(</span><span class="n">soup</span><span class="p">):</span>
+        <span class="n">journal_name_tag</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;journalTitle&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">journal_name_tag</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">MissingAttributeException</span>
+        <span class="k">return</span> <span class="n">journal_name_tag</span><span class="o">.</span><span class="n">string</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__get_issn</span><span class="p">(</span><span class="n">soup</span><span class="p">):</span>
+        <span class="n">issn_tag</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">class_</span><span class="o">=</span><span class="s2">&quot;SideBox_defList&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">issn_tag</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">MissingAttributeException</span>
+        <span class="n">issn_matches</span> <span class="o">=</span> <span class="n">SpringerOpenScraper</span><span class="o">.</span><span class="n">ISSN_PATT</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">issn_tag</span><span class="o">.</span><span class="n">get_text</span><span class="p">())</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">issn_matches</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">MissingAttributeException</span>
+        <span class="k">return</span> <span class="n">issn_matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<div class="viewcode-block" id="SpringerOpenScraper.get_entries"><a class="viewcode-back" href="../../../ThePyStrikesBack.scrapers.html#ThePyStrikesBack.scrapers.journalscrapers.SpringerOpenScraper.get_entries">[docs]</a>    <span class="k">def</span> <span class="nf">get_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">class_</span><span class="o">=</span><span class="s2">&quot;list-stacked__item&quot;</span><span class="p">):</span>
+            <span class="n">link</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)[</span><span class="s2">&quot;href&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">&quot;springeropen.com&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">link</span><span class="p">:</span>
+                <span class="k">print</span> <span class="n">link</span> <span class="o">+</span> <span class="s2">&quot;: Not valid&quot;</span>
+                <span class="k">continue</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">g</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">link</span> <span class="o">+</span> <span class="s2">&quot;about&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                <span class="n">about_soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s1">&#39;lxml&#39;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">print</span> <span class="n">link</span> <span class="o">+</span> <span class="s2">&quot;: Connection problems, continuing to the next entry&quot;</span>
+                <span class="k">continue</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">price</span> <span class="o">=</span> <span class="n">SpringerOpenScraper</span><span class="o">.</span><span class="n">__get_price</span><span class="p">(</span><span class="n">about_soup</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">MissingAttributeException</span><span class="p">:</span>
+                <span class="k">print</span> <span class="n">link</span> <span class="o">+</span> <span class="s2">&quot;: No price could be found&quot;</span>
+                <span class="k">continue</span>  <span class="c1"># skipping to the next entry</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">journal_name</span> <span class="o">=</span> <span class="n">SpringerOpenScraper</span><span class="o">.</span><span class="n">__get_journal_name</span><span class="p">(</span><span class="n">about_soup</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">MissingAttributeException</span><span class="p">:</span>
+                <span class="k">print</span> <span class="n">link</span> <span class="o">+</span> <span class="s2">&quot;: No journal name could be found&quot;</span>
+                <span class="k">continue</span>  <span class="c1"># skipping to the next entry</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">issn</span> <span class="o">=</span> <span class="n">SpringerOpenScraper</span><span class="o">.</span><span class="n">__get_issn</span><span class="p">(</span><span class="n">about_soup</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">MissingAttributeException</span><span class="p">:</span>
+                <span class="k">print</span> <span class="n">link</span> <span class="o">+</span> <span class="s2">&quot;: No ISSN could be found&quot;</span>
+                <span class="k">continue</span>
+
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_unicode_row</span><span class="p">([</span><span class="s2">&quot;Springer&quot;</span><span class="p">,</span> <span class="n">journal_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()),</span> <span class="s2">&quot;OA&quot;</span><span class="p">,</span> <span class="n">issn</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">price</span><span class="p">)])</span></div></div>
+
+
+<div class="viewcode-block" id="WileyScraper"><a class="viewcode-back" href="../../../ThePyStrikesBack.scrapers.html#ThePyStrikesBack.scrapers.journalscrapers.WileyScraper">[docs]</a><span class="k">class</span> <span class="nc">WileyScraper</span><span class="p">(</span><span class="n">BaseJournalScraper</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">http_address</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">http_address</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;lxml&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">PhantomJS</span><span class="p">(</span><span class="n">executable_path</span><span class="o">=</span><span class="s2">&quot;/usr/local/bin/phantomjs&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">set_window_size</span><span class="p">(</span><span class="mi">1120</span><span class="p">,</span> <span class="mi">550</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">http_address</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__get_child_tag_strings</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">tag</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">child</span><span class="o">.</span><span class="n">string</span>
+
+    <span class="k">def</span> <span class="nf">__get_issn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">issn_matches</span> <span class="o">=</span> <span class="p">(</span><span class="n">WileyScraper</span><span class="o">.</span><span class="n">ISSN_PATT</span>
+                        <span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span>
+                                 <span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s2">&quot;//div[@id=&#39;displayJAPCL&#39;]/a[1]&quot;</span><span class="p">)</span>
+                                 <span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s2">&quot;href&quot;</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">issn_matches</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">MissingAttributeException</span>
+        <span class="k">return</span> <span class="n">issn_matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__get_price</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">price</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s2">&quot;displayJAPC&quot;</span><span class="p">)</span>
+                            <span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)))))</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">MissingAttributeException</span>
+        <span class="k">return</span> <span class="n">price</span>
+
+<div class="viewcode-block" id="WileyScraper.get_entries"><a class="viewcode-back" href="../../../ThePyStrikesBack.scrapers.html#ThePyStrikesBack.scrapers.journalscrapers.WileyScraper.get_entries">[docs]</a>    <span class="k">def</span> <span class="nf">get_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">selected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">class_</span><span class="o">=</span><span class="s2">&quot;journal&quot;</span><span class="p">)</span>
+        <span class="n">journal_select</span> <span class="o">=</span> <span class="n">Select</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s2">&quot;journal&quot;</span><span class="p">))</span>
+
+        <span class="c1"># getting rid of first &quot;description&quot; row</span>
+        <span class="n">journal_gen</span> <span class="o">=</span> <span class="n">WileyScraper</span><span class="o">.</span><span class="n">__get_child_tag_strings</span><span class="p">(</span><span class="n">selected</span><span class="p">)</span>
+        <span class="nb">next</span><span class="p">(</span><span class="n">journal_gen</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">journal</span> <span class="ow">in</span> <span class="n">journal_gen</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">journal_select</span><span class="o">.</span><span class="n">select_by_visible_text</span><span class="p">(</span><span class="n">journal</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">NoSuchElementException</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s2">&quot;Couldn&#39;t find matching journal for input: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">journal</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="n">oa_option_element</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s2">&quot;displayJOAP&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">oa_option_element</span><span class="o">.</span><span class="n">text</span> <span class="o">==</span> <span class="s2">&quot;Fully Open Access&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">oa_option_element</span><span class="o">.</span><span class="n">text</span> <span class="o">==</span> <span class="s2">&quot;OpenChoice&quot;</span><span class="p">):</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">price</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_price</span><span class="p">()</span>
+                <span class="k">except</span> <span class="n">MissingAttributeException</span><span class="p">:</span>
+                    <span class="k">print</span> <span class="n">journal</span> <span class="o">+</span> <span class="s2">&quot;: Unable to find price&quot;</span>
+                    <span class="k">continue</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">issn_matches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_issn</span><span class="p">()</span>
+                <span class="k">except</span> <span class="n">MissingAttributeException</span><span class="p">:</span>
+                    <span class="k">print</span> <span class="s2">&quot;Error: &quot;</span> <span class="o">+</span> <span class="n">journal</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">oa_option_element</span><span class="o">.</span><span class="n">text</span>
+                    <span class="k">continue</span>
+
+                <span class="n">journal_type</span> <span class="o">=</span> <span class="s2">&quot;OA&quot;</span> <span class="k">if</span> <span class="n">oa_option_element</span><span class="o">.</span><span class="n">text</span> <span class="o">==</span> <span class="s2">&quot;Fully Open Access&quot;</span> <span class="k">else</span> <span class="s2">&quot;Hybrid&quot;</span>
+                <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_unicode_row</span><span class="p">([</span><span class="s2">&quot;Wiley&quot;</span><span class="p">,</span> <span class="n">journal</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()),</span> <span class="n">journal_type</span><span class="p">,</span> <span class="n">issn_matches</span><span class="p">,</span> <span class="n">price</span><span class="p">])</span></div></div>
+
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Patrick Spieker.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -12,11 +12,18 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import Select
 
-from scrapers.exceptions import MissingAttributeException
-from scrapers.base import BaseJournalScraper
+from exceptions import MissingAttributeException
+from base import BaseJournalScraper
 
 
 class BioMedCentralScraper(BaseJournalScraper):
+    """Web scraper for publisher BioMed Central
+
+    Attributes:
+        http_address (str): Address of the BioMed Central webpage with journal information
+
+    """
+
     paid_for_patt = re.compile("do not need to pay")
     
     def __init__(self, http_address):
