@@ -10,11 +10,11 @@ Supported Publishers
 
 Currently supported
 -------------------
-.. BioMed Central
-.. Elsevier
-.. Hindawi
+- BioMed Central
+- Elsevier
+- Hindawi
 
 In progress
 -----------
-.. Public Library of Science (PLoS)
-.. Sage
+- Public Library of Science (PLoS)
+- Sage
