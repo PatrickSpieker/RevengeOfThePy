@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# ThePyStrikesBack documentation build configuration file, created by
+# pricesleuth documentation build configuration file, created by
 # sphinx-quickstart on Sat Jul  2 16:43:47 2016.
 #
 # This file is execfile()d with the current directory set to its
@@ -55,7 +55,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'thepystrikesback'
+project = u'pricesleuth'
 copyright = u'2016, Patrick Spieker'
 author = u'Patrick Spieker'
 
@@ -140,7 +140,7 @@ html_theme = 'alabaster'
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.
 #
-# html_title = u'ThePyStrikesBack v0.1.1'
+# html_title = u'pricesleuth v0.1.1'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #
@@ -240,7 +240,7 @@ html_static_path = ['_static']
 # html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'thepystrikesbackdoc'
+htmlhelp_basename = 'pricesleuthdoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -266,7 +266,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'thepystrikesback.tex', u'thepystrikesback Documentation',
+    (master_doc, 'pricesleuth.tex', u'pricesleuthback Documentation',
      u'Patrick Spieker', 'manual'),
 ]
 
@@ -302,7 +302,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'thepystrikesback', u'thepystrikesback Documentation',
+    (master_doc, 'pricesleuth', u'pricesleuth Documentation',
      [author], 1)
 ]
 
@@ -317,8 +317,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'thepystrikesback', u'thepystrikesback Documentation',
-     author, 'thepystrikesback', 'One line description of project.',
+    (master_doc, 'pricesleuth', u'pricesleuth Documentation',
+     author, 'pricesleuth', 'One line description of project.',
      'Miscellaneous'),
 ]
 

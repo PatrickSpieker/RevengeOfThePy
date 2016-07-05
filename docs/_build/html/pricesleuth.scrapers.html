@@ -1,0 +1,293 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pricesleuth.scrapers package &mdash; pricesleuth 0.1.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pricesleuth 0.1.1 documentation" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pricesleuth-scrapers-package">
+<h1>pricesleuth.scrapers package<a class="headerlink" href="#pricesleuth-scrapers-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pricesleuth.scrapers.base">
+<span id="pricesleuth-scrapers-base-module"></span><h2>pricesleuth.scrapers.base module<a class="headerlink" href="#module-pricesleuth.scrapers.base" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pricesleuth.scrapers.base.BaseJournalScraper">
+<em class="property">class </em><code class="descclassname">pricesleuth.scrapers.base.</code><code class="descname">BaseJournalScraper</code><a class="reference internal" href="_modules/pricesleuth/scrapers/base.html#BaseJournalScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.base.BaseJournalScraper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pricesleuth.scrapers.base.BaseScraper" title="pricesleuth.scrapers.base.BaseScraper"><code class="xref py py-class docutils literal"><span class="pre">pricesleuth.scrapers.base.BaseScraper</span></code></a></p>
+<dl class="attribute">
+<dt id="pricesleuth.scrapers.base.BaseJournalScraper.COL_NAMES">
+<code class="descname">COL_NAMES</code><em class="property"> = ('pub_name', 'journal_name', 'date', 'journal_type', 'issn', 'apc')</em><a class="headerlink" href="#pricesleuth.scrapers.base.BaseJournalScraper.COL_NAMES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pricesleuth.scrapers.base.BaseJournalScraper.ISSN_PATT">
+<code class="descname">ISSN_PATT</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#pricesleuth.scrapers.base.BaseJournalScraper.ISSN_PATT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pricesleuth.scrapers.base.BaseJournalScraper.PRICE_PATT">
+<code class="descname">PRICE_PATT</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#pricesleuth.scrapers.base.BaseJournalScraper.PRICE_PATT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pricesleuth.scrapers.base.BaseJournalScraper.REPLS">
+<code class="descname">REPLS</code><em class="property"> = {'\xa7': 'B', '\xea': 'I', '\x85': 'O', '\r\xa0': '', '\x87': 'a', '\x8d': 'c', '\x8b': 'a', '\xca': ' ', '\x8a': 'a', '\x8f': 'e', '\x8e': 'e', '\x91': 'i', '\xd0': '', '\x92': 'i', '\xd5': &quot;'&quot;, '\x97': 'o', '\x96': 'n', '\x9a': 'o', ' fee not payable by author': '', '\x9f': 'u'}</em><a class="headerlink" href="#pricesleuth.scrapers.base.BaseJournalScraper.REPLS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="pricesleuth.scrapers.base.BaseJournalScraper.to_unicode_item">
+<em class="property">static </em><code class="descname">to_unicode_item</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/base.html#BaseJournalScraper.to_unicode_item"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.base.BaseJournalScraper.to_unicode_item" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="pricesleuth.scrapers.base.BaseJournalScraper.to_unicode_row">
+<em class="property">static </em><code class="descname">to_unicode_row</code><span class="sig-paren">(</span><em>row</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/base.html#BaseJournalScraper.to_unicode_row"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.base.BaseJournalScraper.to_unicode_row" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pricesleuth.scrapers.base.BaseScraper">
+<em class="property">class </em><code class="descclassname">pricesleuth.scrapers.base.</code><code class="descname">BaseScraper</code><a class="reference internal" href="_modules/pricesleuth/scrapers/base.html#BaseScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.base.BaseScraper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="pricesleuth.scrapers.base.BaseScraper.get_entries">
+<code class="descname">get_entries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/base.html#BaseScraper.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.base.BaseScraper.get_entries" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pricesleuth.scrapers.exceptions">
+<span id="pricesleuth-scrapers-exceptions-module"></span><h2>pricesleuth.scrapers.exceptions module<a class="headerlink" href="#module-pricesleuth.scrapers.exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="pricesleuth.scrapers.exceptions.MissingAttributeException">
+<em class="property">exception </em><code class="descclassname">pricesleuth.scrapers.exceptions.</code><code class="descname">MissingAttributeException</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/exceptions.html#MissingAttributeException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.exceptions.MissingAttributeException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="pricesleuth.scrapers.exceptions.MissingPriceException">
+<em class="property">exception </em><code class="descclassname">pricesleuth.scrapers.exceptions.</code><code class="descname">MissingPriceException</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/exceptions.html#MissingPriceException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.exceptions.MissingPriceException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pricesleuth.scrapers.exceptions.MissingAttributeException" title="pricesleuth.scrapers.exceptions.MissingAttributeException"><code class="xref py py-class docutils literal"><span class="pre">pricesleuth.scrapers.exceptions.MissingAttributeException</span></code></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pricesleuth.scrapers.journalscrapers">
+<span id="pricesleuth-scrapers-journalscrapers-module"></span><h2>pricesleuth.scrapers.journalscrapers module<a class="headerlink" href="#module-pricesleuth.scrapers.journalscrapers" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pricesleuth.scrapers.journalscrapers.BioMedCentralScraper">
+<em class="property">class </em><code class="descclassname">pricesleuth.scrapers.journalscrapers.</code><code class="descname">BioMedCentralScraper</code><span class="sig-paren">(</span><em>http_address</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/journalscrapers.html#BioMedCentralScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.journalscrapers.BioMedCentralScraper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pricesleuth.scrapers.base.BaseJournalScraper" title="pricesleuth.scrapers.base.BaseJournalScraper"><code class="xref py py-class docutils literal"><span class="pre">pricesleuth.scrapers.base.BaseJournalScraper</span></code></a></p>
+<p>Web scraper for publisher BioMed Central</p>
+<dl class="attribute">
+<dt id="pricesleuth.scrapers.journalscrapers.BioMedCentralScraper.http_address">
+<code class="descname">http_address</code><a class="headerlink" href="#pricesleuth.scrapers.journalscrapers.BioMedCentralScraper.http_address" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Address of the BioMed Central webpage with journal information</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pricesleuth.scrapers.journalscrapers.BioMedCentralScraper.get_entries">
+<code class="descname">get_entries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/journalscrapers.html#BioMedCentralScraper.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.journalscrapers.BioMedCentralScraper.get_entries" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pricesleuth.scrapers.journalscrapers.BioMedCentralScraper.paid_for_patt">
+<code class="descname">paid_for_patt</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#pricesleuth.scrapers.journalscrapers.BioMedCentralScraper.paid_for_patt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pricesleuth.scrapers.journalscrapers.ElsevierScraper">
+<em class="property">class </em><code class="descclassname">pricesleuth.scrapers.journalscrapers.</code><code class="descname">ElsevierScraper</code><span class="sig-paren">(</span><em>csv_filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/journalscrapers.html#ElsevierScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.journalscrapers.ElsevierScraper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pricesleuth.scrapers.base.BaseJournalScraper" title="pricesleuth.scrapers.base.BaseJournalScraper"><code class="xref py py-class docutils literal"><span class="pre">pricesleuth.scrapers.base.BaseJournalScraper</span></code></a></p>
+<dl class="method">
+<dt id="pricesleuth.scrapers.journalscrapers.ElsevierScraper.get_entries">
+<code class="descname">get_entries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/journalscrapers.html#ElsevierScraper.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.journalscrapers.ElsevierScraper.get_entries" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pricesleuth.scrapers.journalscrapers.ExistingScraper">
+<em class="property">class </em><code class="descclassname">pricesleuth.scrapers.journalscrapers.</code><code class="descname">ExistingScraper</code><span class="sig-paren">(</span><em>csv_filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/journalscrapers.html#ExistingScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.journalscrapers.ExistingScraper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pricesleuth.scrapers.base.BaseJournalScraper" title="pricesleuth.scrapers.base.BaseJournalScraper"><code class="xref py py-class docutils literal"><span class="pre">pricesleuth.scrapers.base.BaseJournalScraper</span></code></a></p>
+<dl class="method">
+<dt id="pricesleuth.scrapers.journalscrapers.ExistingScraper.get_entries">
+<code class="descname">get_entries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/journalscrapers.html#ExistingScraper.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.journalscrapers.ExistingScraper.get_entries" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pricesleuth.scrapers.journalscrapers.HindawiScraper">
+<em class="property">class </em><code class="descclassname">pricesleuth.scrapers.journalscrapers.</code><code class="descname">HindawiScraper</code><span class="sig-paren">(</span><em>http_address</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/journalscrapers.html#HindawiScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.journalscrapers.HindawiScraper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pricesleuth.scrapers.base.BaseJournalScraper" title="pricesleuth.scrapers.base.BaseJournalScraper"><code class="xref py py-class docutils literal"><span class="pre">pricesleuth.scrapers.base.BaseJournalScraper</span></code></a></p>
+<dl class="method">
+<dt id="pricesleuth.scrapers.journalscrapers.HindawiScraper.get_entries">
+<code class="descname">get_entries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/journalscrapers.html#HindawiScraper.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.journalscrapers.HindawiScraper.get_entries" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pricesleuth.scrapers.journalscrapers.PLOSScraper">
+<em class="property">class </em><code class="descclassname">pricesleuth.scrapers.journalscrapers.</code><code class="descname">PLOSScraper</code><span class="sig-paren">(</span><em>http_address</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/journalscrapers.html#PLOSScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.journalscrapers.PLOSScraper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pricesleuth.scrapers.base.BaseJournalScraper" title="pricesleuth.scrapers.base.BaseJournalScraper"><code class="xref py py-class docutils literal"><span class="pre">pricesleuth.scrapers.base.BaseJournalScraper</span></code></a></p>
+<p>Scraper isn&#8217;t actually finished yet. Can&#8217;t port it</p>
+<dl class="method">
+<dt id="pricesleuth.scrapers.journalscrapers.PLOSScraper.get_entries">
+<code class="descname">get_entries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/journalscrapers.html#PLOSScraper.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.journalscrapers.PLOSScraper.get_entries" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pricesleuth.scrapers.journalscrapers.SageHybridScraper">
+<em class="property">class </em><code class="descclassname">pricesleuth.scrapers.journalscrapers.</code><code class="descname">SageHybridScraper</code><span class="sig-paren">(</span><em>http_address</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/journalscrapers.html#SageHybridScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.journalscrapers.SageHybridScraper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pricesleuth.scrapers.base.BaseJournalScraper" title="pricesleuth.scrapers.base.BaseJournalScraper"><code class="xref py py-class docutils literal"><span class="pre">pricesleuth.scrapers.base.BaseJournalScraper</span></code></a></p>
+<p>Scraper isn&#8217;t actually finished yet. Can&#8217;t port it</p>
+<dl class="method">
+<dt id="pricesleuth.scrapers.journalscrapers.SageHybridScraper.get_entries">
+<code class="descname">get_entries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/journalscrapers.html#SageHybridScraper.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.journalscrapers.SageHybridScraper.get_entries" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pricesleuth.scrapers.journalscrapers.SpringerHybridScraper">
+<em class="property">class </em><code class="descclassname">pricesleuth.scrapers.journalscrapers.</code><code class="descname">SpringerHybridScraper</code><span class="sig-paren">(</span><em>csv_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/journalscrapers.html#SpringerHybridScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.journalscrapers.SpringerHybridScraper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pricesleuth.scrapers.base.BaseJournalScraper" title="pricesleuth.scrapers.base.BaseJournalScraper"><code class="xref py py-class docutils literal"><span class="pre">pricesleuth.scrapers.base.BaseJournalScraper</span></code></a></p>
+<dl class="method">
+<dt id="pricesleuth.scrapers.journalscrapers.SpringerHybridScraper.get_entries">
+<code class="descname">get_entries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/journalscrapers.html#SpringerHybridScraper.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.journalscrapers.SpringerHybridScraper.get_entries" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pricesleuth.scrapers.journalscrapers.SpringerOpenScraper">
+<em class="property">class </em><code class="descclassname">pricesleuth.scrapers.journalscrapers.</code><code class="descname">SpringerOpenScraper</code><span class="sig-paren">(</span><em>http_address</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/journalscrapers.html#SpringerOpenScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.journalscrapers.SpringerOpenScraper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pricesleuth.scrapers.base.BaseJournalScraper" title="pricesleuth.scrapers.base.BaseJournalScraper"><code class="xref py py-class docutils literal"><span class="pre">pricesleuth.scrapers.base.BaseJournalScraper</span></code></a></p>
+<dl class="method">
+<dt id="pricesleuth.scrapers.journalscrapers.SpringerOpenScraper.get_entries">
+<code class="descname">get_entries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/journalscrapers.html#SpringerOpenScraper.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.journalscrapers.SpringerOpenScraper.get_entries" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pricesleuth.scrapers.journalscrapers.WileyScraper">
+<em class="property">class </em><code class="descclassname">pricesleuth.scrapers.journalscrapers.</code><code class="descname">WileyScraper</code><span class="sig-paren">(</span><em>http_address</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/journalscrapers.html#WileyScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.journalscrapers.WileyScraper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pricesleuth.scrapers.base.BaseJournalScraper" title="pricesleuth.scrapers.base.BaseJournalScraper"><code class="xref py py-class docutils literal"><span class="pre">pricesleuth.scrapers.base.BaseJournalScraper</span></code></a></p>
+<dl class="method">
+<dt id="pricesleuth.scrapers.journalscrapers.WileyScraper.get_entries">
+<code class="descname">get_entries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pricesleuth/scrapers/journalscrapers.html#WileyScraper.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pricesleuth.scrapers.journalscrapers.WileyScraper.get_entries" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pricesleuth.scrapers">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pricesleuth.scrapers" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">pricesleuth.scrapers package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-pricesleuth.scrapers.base">pricesleuth.scrapers.base module</a></li>
+<li><a class="reference internal" href="#module-pricesleuth.scrapers.exceptions">pricesleuth.scrapers.exceptions module</a></li>
+<li><a class="reference internal" href="#module-pricesleuth.scrapers.journalscrapers">pricesleuth.scrapers.journalscrapers module</a></li>
+<li><a class="reference internal" href="#module-pricesleuth.scrapers">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/pricesleuth.scrapers.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Patrick Spieker.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/pricesleuth.scrapers.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

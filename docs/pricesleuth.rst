@@ -1,17 +1,17 @@
-ThePyStrikesBack package
-========================
+pricesleuth package
+===================
 
 Subpackages
 -----------
 
 .. toctree::
 
-    ThePyStrikesBack.scrapers
+    pricesleuth.scrapers
 
 Module contents
 ---------------
 
-.. automodule:: ThePyStrikesBack
+.. automodule:: pricesleuth
     :members:
     :undoc-members:
     :show-inheritance:

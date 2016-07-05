@@ -43,189 +43,17 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-ThePyStrikesBack.scrapers.base">
-<span id="thepystrikesback-scrapers-base-module"></span><h2>ThePyStrikesBack.scrapers.base module<a class="headerlink" href="#module-ThePyStrikesBack.scrapers.base" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="ThePyStrikesBack.scrapers.base.BaseJournalScraper">
-<em class="property">class </em><code class="descclassname">ThePyStrikesBack.scrapers.base.</code><code class="descname">BaseJournalScraper</code><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/base.html#BaseJournalScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.base.BaseJournalScraper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ThePyStrikesBack.scrapers.base.BaseScraper" title="ThePyStrikesBack.scrapers.base.BaseScraper"><code class="xref py py-class docutils literal"><span class="pre">ThePyStrikesBack.scrapers.base.BaseScraper</span></code></a></p>
-<dl class="attribute">
-<dt id="ThePyStrikesBack.scrapers.base.BaseJournalScraper.COL_NAMES">
-<code class="descname">COL_NAMES</code><em class="property"> = ('pub_name', 'journal_name', 'date', 'journal_type', 'issn', 'apc')</em><a class="headerlink" href="#ThePyStrikesBack.scrapers.base.BaseJournalScraper.COL_NAMES" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="ThePyStrikesBack.scrapers.base.BaseJournalScraper.ISSN_PATT">
-<code class="descname">ISSN_PATT</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#ThePyStrikesBack.scrapers.base.BaseJournalScraper.ISSN_PATT" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="ThePyStrikesBack.scrapers.base.BaseJournalScraper.PRICE_PATT">
-<code class="descname">PRICE_PATT</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#ThePyStrikesBack.scrapers.base.BaseJournalScraper.PRICE_PATT" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="ThePyStrikesBack.scrapers.base.BaseJournalScraper.REPLS">
-<code class="descname">REPLS</code><em class="property"> = {'\xa7': 'B', '\xea': 'I', '\x85': 'O', '\r\xa0': '', '\x87': 'a', '\x8d': 'c', '\x8b': 'a', '\xca': ' ', '\x8a': 'a', '\x8f': 'e', '\x8e': 'e', '\x91': 'i', '\xd0': '', '\x92': 'i', '\xd5': &quot;'&quot;, '\x97': 'o', '\x96': 'n', '\x9a': 'o', ' fee not payable by author': '', '\x9f': 'u'}</em><a class="headerlink" href="#ThePyStrikesBack.scrapers.base.BaseJournalScraper.REPLS" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="staticmethod">
-<dt id="ThePyStrikesBack.scrapers.base.BaseJournalScraper.to_unicode_item">
-<em class="property">static </em><code class="descname">to_unicode_item</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/base.html#BaseJournalScraper.to_unicode_item"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.base.BaseJournalScraper.to_unicode_item" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="staticmethod">
-<dt id="ThePyStrikesBack.scrapers.base.BaseJournalScraper.to_unicode_row">
-<em class="property">static </em><code class="descname">to_unicode_row</code><span class="sig-paren">(</span><em>row</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/base.html#BaseJournalScraper.to_unicode_row"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.base.BaseJournalScraper.to_unicode_row" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ThePyStrikesBack.scrapers.base.BaseScraper">
-<em class="property">class </em><code class="descclassname">ThePyStrikesBack.scrapers.base.</code><code class="descname">BaseScraper</code><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/base.html#BaseScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.base.BaseScraper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<dl class="method">
-<dt id="ThePyStrikesBack.scrapers.base.BaseScraper.get_entries">
-<code class="descname">get_entries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/base.html#BaseScraper.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.base.BaseScraper.get_entries" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+<div class="section" id="thepystrikesback-scrapers-base-module">
+<h2>ThePyStrikesBack.scrapers.base module<a class="headerlink" href="#thepystrikesback-scrapers-base-module" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-ThePyStrikesBack.scrapers.exceptions">
-<span id="thepystrikesback-scrapers-exceptions-module"></span><h2>ThePyStrikesBack.scrapers.exceptions module<a class="headerlink" href="#module-ThePyStrikesBack.scrapers.exceptions" title="Permalink to this headline">¶</a></h2>
-<dl class="exception">
-<dt id="ThePyStrikesBack.scrapers.exceptions.MissingAttributeException">
-<em class="property">exception </em><code class="descclassname">ThePyStrikesBack.scrapers.exceptions.</code><code class="descname">MissingAttributeException</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/exceptions.html#MissingAttributeException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.exceptions.MissingAttributeException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
-</dd></dl>
-
-<dl class="exception">
-<dt id="ThePyStrikesBack.scrapers.exceptions.MissingPriceException">
-<em class="property">exception </em><code class="descclassname">ThePyStrikesBack.scrapers.exceptions.</code><code class="descname">MissingPriceException</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/exceptions.html#MissingPriceException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.exceptions.MissingPriceException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ThePyStrikesBack.scrapers.exceptions.MissingAttributeException" title="ThePyStrikesBack.scrapers.exceptions.MissingAttributeException"><code class="xref py py-class docutils literal"><span class="pre">ThePyStrikesBack.scrapers.exceptions.MissingAttributeException</span></code></a></p>
-</dd></dl>
-
+<div class="section" id="thepystrikesback-scrapers-exceptions-module">
+<h2>ThePyStrikesBack.scrapers.exceptions module<a class="headerlink" href="#thepystrikesback-scrapers-exceptions-module" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-ThePyStrikesBack.scrapers.journalscrapers">
-<span id="thepystrikesback-scrapers-journalscrapers-module"></span><h2>ThePyStrikesBack.scrapers.journalscrapers module<a class="headerlink" href="#module-ThePyStrikesBack.scrapers.journalscrapers" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="ThePyStrikesBack.scrapers.journalscrapers.BioMedCentralScraper">
-<em class="property">class </em><code class="descclassname">ThePyStrikesBack.scrapers.journalscrapers.</code><code class="descname">BioMedCentralScraper</code><span class="sig-paren">(</span><em>http_address</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/journalscrapers.html#BioMedCentralScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.journalscrapers.BioMedCentralScraper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ThePyStrikesBack.scrapers.base.BaseJournalScraper" title="ThePyStrikesBack.scrapers.base.BaseJournalScraper"><code class="xref py py-class docutils literal"><span class="pre">ThePyStrikesBack.scrapers.base.BaseJournalScraper</span></code></a></p>
-<p>Web scraper for publisher BioMed Central</p>
-<dl class="attribute">
-<dt id="ThePyStrikesBack.scrapers.journalscrapers.BioMedCentralScraper.http_address">
-<code class="descname">http_address</code><a class="headerlink" href="#ThePyStrikesBack.scrapers.journalscrapers.BioMedCentralScraper.http_address" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> &#8211; Address of the BioMed Central webpage with journal information</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ThePyStrikesBack.scrapers.journalscrapers.BioMedCentralScraper.get_entries">
-<code class="descname">get_entries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/journalscrapers.html#BioMedCentralScraper.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.journalscrapers.BioMedCentralScraper.get_entries" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="ThePyStrikesBack.scrapers.journalscrapers.BioMedCentralScraper.paid_for_patt">
-<code class="descname">paid_for_patt</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#ThePyStrikesBack.scrapers.journalscrapers.BioMedCentralScraper.paid_for_patt" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ThePyStrikesBack.scrapers.journalscrapers.ElsevierScraper">
-<em class="property">class </em><code class="descclassname">ThePyStrikesBack.scrapers.journalscrapers.</code><code class="descname">ElsevierScraper</code><span class="sig-paren">(</span><em>csv_filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/journalscrapers.html#ElsevierScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.journalscrapers.ElsevierScraper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ThePyStrikesBack.scrapers.base.BaseJournalScraper" title="ThePyStrikesBack.scrapers.base.BaseJournalScraper"><code class="xref py py-class docutils literal"><span class="pre">ThePyStrikesBack.scrapers.base.BaseJournalScraper</span></code></a></p>
-<dl class="method">
-<dt id="ThePyStrikesBack.scrapers.journalscrapers.ElsevierScraper.get_entries">
-<code class="descname">get_entries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/journalscrapers.html#ElsevierScraper.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.journalscrapers.ElsevierScraper.get_entries" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ThePyStrikesBack.scrapers.journalscrapers.ExistingScraper">
-<em class="property">class </em><code class="descclassname">ThePyStrikesBack.scrapers.journalscrapers.</code><code class="descname">ExistingScraper</code><span class="sig-paren">(</span><em>csv_filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/journalscrapers.html#ExistingScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.journalscrapers.ExistingScraper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ThePyStrikesBack.scrapers.base.BaseJournalScraper" title="ThePyStrikesBack.scrapers.base.BaseJournalScraper"><code class="xref py py-class docutils literal"><span class="pre">ThePyStrikesBack.scrapers.base.BaseJournalScraper</span></code></a></p>
-<dl class="method">
-<dt id="ThePyStrikesBack.scrapers.journalscrapers.ExistingScraper.get_entries">
-<code class="descname">get_entries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/journalscrapers.html#ExistingScraper.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.journalscrapers.ExistingScraper.get_entries" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ThePyStrikesBack.scrapers.journalscrapers.HindawiScraper">
-<em class="property">class </em><code class="descclassname">ThePyStrikesBack.scrapers.journalscrapers.</code><code class="descname">HindawiScraper</code><span class="sig-paren">(</span><em>http_address</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/journalscrapers.html#HindawiScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.journalscrapers.HindawiScraper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ThePyStrikesBack.scrapers.base.BaseJournalScraper" title="ThePyStrikesBack.scrapers.base.BaseJournalScraper"><code class="xref py py-class docutils literal"><span class="pre">ThePyStrikesBack.scrapers.base.BaseJournalScraper</span></code></a></p>
-<dl class="method">
-<dt id="ThePyStrikesBack.scrapers.journalscrapers.HindawiScraper.get_entries">
-<code class="descname">get_entries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/journalscrapers.html#HindawiScraper.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.journalscrapers.HindawiScraper.get_entries" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ThePyStrikesBack.scrapers.journalscrapers.PLOSScraper">
-<em class="property">class </em><code class="descclassname">ThePyStrikesBack.scrapers.journalscrapers.</code><code class="descname">PLOSScraper</code><span class="sig-paren">(</span><em>http_address</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/journalscrapers.html#PLOSScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.journalscrapers.PLOSScraper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ThePyStrikesBack.scrapers.base.BaseJournalScraper" title="ThePyStrikesBack.scrapers.base.BaseJournalScraper"><code class="xref py py-class docutils literal"><span class="pre">ThePyStrikesBack.scrapers.base.BaseJournalScraper</span></code></a></p>
-<p>Scraper isn&#8217;t actually finished yet. Can&#8217;t port it</p>
-<dl class="method">
-<dt id="ThePyStrikesBack.scrapers.journalscrapers.PLOSScraper.get_entries">
-<code class="descname">get_entries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/journalscrapers.html#PLOSScraper.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.journalscrapers.PLOSScraper.get_entries" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ThePyStrikesBack.scrapers.journalscrapers.SageHybridScraper">
-<em class="property">class </em><code class="descclassname">ThePyStrikesBack.scrapers.journalscrapers.</code><code class="descname">SageHybridScraper</code><span class="sig-paren">(</span><em>http_address</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/journalscrapers.html#SageHybridScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.journalscrapers.SageHybridScraper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ThePyStrikesBack.scrapers.base.BaseJournalScraper" title="ThePyStrikesBack.scrapers.base.BaseJournalScraper"><code class="xref py py-class docutils literal"><span class="pre">ThePyStrikesBack.scrapers.base.BaseJournalScraper</span></code></a></p>
-<p>Scraper isn&#8217;t actually finished yet. Can&#8217;t port it</p>
-<dl class="method">
-<dt id="ThePyStrikesBack.scrapers.journalscrapers.SageHybridScraper.get_entries">
-<code class="descname">get_entries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/journalscrapers.html#SageHybridScraper.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.journalscrapers.SageHybridScraper.get_entries" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ThePyStrikesBack.scrapers.journalscrapers.SpringerHybridScraper">
-<em class="property">class </em><code class="descclassname">ThePyStrikesBack.scrapers.journalscrapers.</code><code class="descname">SpringerHybridScraper</code><span class="sig-paren">(</span><em>csv_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/journalscrapers.html#SpringerHybridScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.journalscrapers.SpringerHybridScraper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ThePyStrikesBack.scrapers.base.BaseJournalScraper" title="ThePyStrikesBack.scrapers.base.BaseJournalScraper"><code class="xref py py-class docutils literal"><span class="pre">ThePyStrikesBack.scrapers.base.BaseJournalScraper</span></code></a></p>
-<dl class="method">
-<dt id="ThePyStrikesBack.scrapers.journalscrapers.SpringerHybridScraper.get_entries">
-<code class="descname">get_entries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/journalscrapers.html#SpringerHybridScraper.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.journalscrapers.SpringerHybridScraper.get_entries" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ThePyStrikesBack.scrapers.journalscrapers.SpringerOpenScraper">
-<em class="property">class </em><code class="descclassname">ThePyStrikesBack.scrapers.journalscrapers.</code><code class="descname">SpringerOpenScraper</code><span class="sig-paren">(</span><em>http_address</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/journalscrapers.html#SpringerOpenScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.journalscrapers.SpringerOpenScraper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ThePyStrikesBack.scrapers.base.BaseJournalScraper" title="ThePyStrikesBack.scrapers.base.BaseJournalScraper"><code class="xref py py-class docutils literal"><span class="pre">ThePyStrikesBack.scrapers.base.BaseJournalScraper</span></code></a></p>
-<dl class="method">
-<dt id="ThePyStrikesBack.scrapers.journalscrapers.SpringerOpenScraper.get_entries">
-<code class="descname">get_entries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/journalscrapers.html#SpringerOpenScraper.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.journalscrapers.SpringerOpenScraper.get_entries" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ThePyStrikesBack.scrapers.journalscrapers.WileyScraper">
-<em class="property">class </em><code class="descclassname">ThePyStrikesBack.scrapers.journalscrapers.</code><code class="descname">WileyScraper</code><span class="sig-paren">(</span><em>http_address</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/journalscrapers.html#WileyScraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.journalscrapers.WileyScraper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ThePyStrikesBack.scrapers.base.BaseJournalScraper" title="ThePyStrikesBack.scrapers.base.BaseJournalScraper"><code class="xref py py-class docutils literal"><span class="pre">ThePyStrikesBack.scrapers.base.BaseJournalScraper</span></code></a></p>
-<dl class="method">
-<dt id="ThePyStrikesBack.scrapers.journalscrapers.WileyScraper.get_entries">
-<code class="descname">get_entries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThePyStrikesBack/scrapers/journalscrapers.html#WileyScraper.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThePyStrikesBack.scrapers.journalscrapers.WileyScraper.get_entries" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+<div class="section" id="thepystrikesback-scrapers-journalscrapers-module">
+<h2>ThePyStrikesBack.scrapers.journalscrapers module<a class="headerlink" href="#thepystrikesback-scrapers-journalscrapers-module" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-ThePyStrikesBack.scrapers">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ThePyStrikesBack.scrapers" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -239,10 +67,10 @@
   <ul>
 <li><a class="reference internal" href="#">ThePyStrikesBack.scrapers package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-ThePyStrikesBack.scrapers.base">ThePyStrikesBack.scrapers.base module</a></li>
-<li><a class="reference internal" href="#module-ThePyStrikesBack.scrapers.exceptions">ThePyStrikesBack.scrapers.exceptions module</a></li>
-<li><a class="reference internal" href="#module-ThePyStrikesBack.scrapers.journalscrapers">ThePyStrikesBack.scrapers.journalscrapers module</a></li>
-<li><a class="reference internal" href="#module-ThePyStrikesBack.scrapers">Module contents</a></li>
+<li><a class="reference internal" href="#thepystrikesback-scrapers-base-module">ThePyStrikesBack.scrapers.base module</a></li>
+<li><a class="reference internal" href="#thepystrikesback-scrapers-exceptions-module">ThePyStrikesBack.scrapers.exceptions module</a></li>
+<li><a class="reference internal" href="#thepystrikesback-scrapers-journalscrapers-module">ThePyStrikesBack.scrapers.journalscrapers module</a></li>
+<li><a class="reference internal" href="#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>

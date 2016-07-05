@@ -1,6 +1,6 @@
 ThePyStrikesBack
 ================
-ThePyStrikesBack is a Python library for acquiring data on OpenAccess journals, including article processing
+``thepystrikesback`` is a Python library for acquiring data on OpenAccess journals, including article processing
 charge (apc) information. It works with a variety of large publishers and also incorporates some smaller,
 miscellaneous publishers.
 
@@ -23,12 +23,13 @@ In progress
 Installation
 ------------
 ThePyStrikesBack (will be) available on PyPI.
-``pip install ThePyStrikesBack``
+
+``pip install thepystrikesback``
 
 -----
 Usage
 -----
-All of the journal scrapers are located in ``ThePyStrikesBack.scrapers.journalscrapers``.
+All of the journal scrapers are located in ``thepystrikesback.scrapers.journalscrapers``.
 A specific journal's scraper object is formatted like ``[ScraperNameHere]Scraper``.
 
 All scraper objects have a ``get_entries`` method, which returns a generator which generates

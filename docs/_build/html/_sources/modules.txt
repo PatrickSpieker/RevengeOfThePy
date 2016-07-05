@@ -1,7 +1,7 @@
-ThePyStrikesBack
-================
+pricesleuth
+===========
 
 .. toctree::
    :maxdepth: 4
 
-   ThePyStrikesBack
+   pricesleuth
