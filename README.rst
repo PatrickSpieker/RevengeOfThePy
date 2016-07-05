@@ -1,6 +1,7 @@
-ThePyStrikesBack
-================
-``thepystrikesback`` is a Python library for acquiring data on OpenAccess journals, including article processing
+
+pricesleuth
+===========
+``pricesleuth`` is a Python library for acquiring data on OpenAccess journals, including article processing
 charge (apc) information. It works with a variety of large publishers and also incorporates some smaller,
 miscellaneous publishers.
 
@@ -22,14 +23,15 @@ In progress
 ------------
 Installation
 ------------
-ThePyStrikesBack (will be) available on PyPI.
 
-``pip install thepystrikesback``
+pricesleuth (will be) available on PyPI.
+
+``pip install pricesleuth``
 
 -----
 Usage
 -----
-All of the journal scrapers are located in ``thepystrikesback.scrapers.journalscrapers``.
+All of the journal scrapers are located in ``pricesleuth.scrapers.journalscrapers``.
 A specific journal's scraper object is formatted like ``[ScraperNameHere]Scraper``.
 
 All scraper objects have a ``get_entries`` method, which returns a generator which generates
