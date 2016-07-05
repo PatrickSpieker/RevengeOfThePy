@@ -8,7 +8,7 @@ class TestGenScraper(unittest.TestCase):
     def setUp(self):
         self.SCRAPERS = [
             BioMedCentralScraper("https://www.biomedcentral.com/journals"),
-            ElsevierScraper("../data/elsevier/2016-uncleaned-csv.csv"),
+            ElsevierScraper("../data/elsevier/2016-uncleaned.csv"),
             ExistingScraper("../data/OA_journals.tsv"),
             HindawiScraper("http://www.hindawi.com/apc/"),
             PLOSScraper("https://www.plos.org/publication-fees"),
