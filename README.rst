@@ -26,7 +26,7 @@ In progress
 Installation
 ------------
 
-```pricesleuth``` (will be) available on PyPI.
+``pricesleuth`` (will be) available on PyPI.
 
 ``pip install pricesleuth``
 
@@ -39,7 +39,7 @@ A specific journal's scraper object is formatted like ``[ScraperNameHere]Scraper
 All scraper objects have a ``get_entries`` method, which returns a generator which generates
 a Python tuple for each successfully scraped journal from that publisher. The tuple is of the form:
 
-```(publisher_name, journal_name, date_of_scraping, journal_type, ISSN_of_journal, article_publishing_cost)```
+``(publisher_name, journal_name, date_of_scraping, journal_type, ISSN_of_journal, article_publishing_cost)``
 
 - publisher_name:
 
